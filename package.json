@@ -1,0 +1,30 @@
+{
+  "name": "kafka-consumer",
+  "version": "1.0.0",
+  "description": "kafka-consumer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Sunny",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "body-parser": "^1.19.0",
+    "dotenv": "^8.2.0",
+    "execution-time": "^1.4.1",
+    "express": "^4.17.1",
+    "faker": "^4.1.0",
+    "forever": "^3.0.0",
+    "fs": "0.0.1-security",
+    "js2xml": "^1.0.9",
+    "kafka-node": "^5.0.0",
+    "lodash": "^4.17.19",
+    "moment": "^2.27.0",
+    "mongodb": "^3.6.0",
+    "mongoose": "^5.9.26",
+    "nodejs": "0.0.0",
+    "uuid": "^8.3.0",
+    "xml2js": "^0.4.23"
+  }
+}
