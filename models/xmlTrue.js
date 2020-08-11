@@ -7,14 +7,14 @@ exports.convertJSONToXML = (json)=>{
           var message = {
             message: {
               sms: {$: {type: 'mt'},
-                "service-id": json.uuid,
+                "service-id": json.send_id,
                 destination: {
                   address: {
                     number: {
                       $: {
                         type: "international",
                       },
-                      _: json.TO,
+                      _: json.ophone,
                     },
                   },
                 },
@@ -24,15 +24,15 @@ exports.convertJSONToXML = (json)=>{
                       $: {
                         type: "abbreviated",
                       },
-                      _: json.TO,
+                      _: json.ophone,
                     },
                     originate: {
                       $: {
                         type: "international",
                       },
-                      _: json.TO,
+                      _: json.ophone,
                     },
-                    sender: json.FROM,
+                    sender: json.sendername,
                   },
                 },
                 ud: {

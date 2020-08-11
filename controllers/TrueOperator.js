@@ -5,17 +5,19 @@ const moment = require("moment");
 var xml2js = require("xml2js");
 var parseString = require("xml2js").parseString;
 var builder = new xml2js.Builder({xmldec:{'version': '1.0', 'encoding': 'TIS-620'}});
-var xmlTrue = require('../models/xmlTrue')
-const MAX_REQUESTS_COUNT = 100;
+
+const MAX_REQUESTS_COUNT = 150;
 const INTERVAL_MS = 1000;
 let PENDING_REQUESTS = 0;
+
 // create new axios instance
 const api = axios.create({});
-var i = 0
-var data;
+var dataLength = 0
 var config = {
   headers: {'Content-Type': 'text/xml'}
 };
+
+var xmlTrue = require('../models/xmlTrue')
 
 //-----Controller-----
 const smsController = require('./smsController');
@@ -31,15 +33,17 @@ mongoose.connect(url+'/SMS', { useNewUrlParser: true, useUnifiedTopology: true})
  */
 api.interceptors.request.use(function (config) {
   return new Promise((resolve, reject) => {
-    // console.log(config)
-    let log = `start : ${moment().format("YYYY-MM-DD HH:mm:ss")}\n`;
-    let interval = setInterval(() => {
+    try {
+      let interval = setInterval(() => {
         if (PENDING_REQUESTS < MAX_REQUESTS_COUNT) {
             PENDING_REQUESTS++
             clearInterval(interval)
             resolve(config)
         }
-    }, INTERVAL_MS)
+      }, INTERVAL_MS)
+    } catch (error) {
+      reject(error); 
+    }
   });
 });
 
@@ -47,24 +51,27 @@ api.interceptors.request.use(function (config) {
  * Axios Response Interceptor
  */
 api.interceptors.response.use(
-    
   async (response) => {
-    i--;
+    //-----Log here-----
+    //==========================================
+
+    //==========================================
+    dataLength--;
     PENDING_REQUESTS = Math.max(0, PENDING_REQUESTS - 1)
     var res = await convertXMLToJSON(response.data);
     // console.log(JSON.stringify(res.message.$.id))
     var uuid = res.message.rsr[0]['service-id'][0];
     var smid = res.message.$.id;
-    console.log(i)
+
+    console.log(dataLength)
+
     // -----Update-----
-    if (i==0){
-        console.log('wow')
+    if (dataLength==0){
         await smsController.updateLastSMID({"uuid": uuid,"SMID":smid})
         mongoose.connection.close();
     }else{
         smsController.updateSMID({"uuid": uuid,"SMID":smid})
     }
-
     return Promise.resolve(response.data);
   },
   function (error) {
@@ -85,15 +92,21 @@ const convertXMLToJSON = (xml) => {
   });
 };
 
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}   
+
 const sendToTRUE = async (params) => {
-    i = params.length;
-    try {
-        for (let i = 0; i < params.length; i++) {
-            var xml = await xmlTrue.convertJSONToXML(params[i])
-            api.post(`http://192.168.60.37/SMSLink/SendMsg/TRUE.php`,xml,config)
-        }
+  dataLength = params.length;
+  try {
+    for (let i = 0; i < params.length; i++) {
+      var xml = await xmlTrue.convertJSONToXML(params[i])
+        api.post(`http://192.168.60.37:8100/send-sms-true`,xml,config)
+      }
     } catch (error) {
-        console.log("error : ", error);
+      console.log("error : ", error);
     }
 };
 

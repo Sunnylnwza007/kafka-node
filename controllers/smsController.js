@@ -28,16 +28,16 @@ exports.insert = function (req,res){
 
 
 exports.updateSMID = function (req,res){
-    smsModel.updateOne({'uuid': req.uuid},{$set:{"SMID": req.SMID}},function(err,res){
-        if (err) console.log(err);
-        console.log(res)
+    smsModel.updateOne({'send_id': req.send_id},{$set:{"smid": req.smid}},function(err,res){
+        if (err) console.log(`From Controller: ${err}`);
+        // console.log(res)
     })
 }
 
 exports.updateLastSMID = function (req,res){
     return new Promise((resolve,reject)=>{
-        smsModel.updateOne({'uuid': req.uuid},{$set:{"SMID": req.SMID}},function(err,res){
-            if (err) console.log(err);
+        smsModel.updateOne({'send_id': req.send_id},{$set:{"smid": req.smid}},function(err,res){
+            if (err) console.log(`From Controller: ${err}`);
             resolve(res)
         })
     })

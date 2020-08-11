@@ -19,11 +19,12 @@ var mongoose = require('mongoose');
 mongoose.connect(url+'/SMS', { useNewUrlParser: true, useUnifiedTopology: true })
 
 
-let obj = smsGenerate.sms(20000);
+let obj = smsGenerate.sms(4);
 var json = JSON.stringify(obj);
+// console.log(obj.doc)
 producer.on('ready',async function () {
     console.log('ready')
-    await smsController.insert(obj);
+    await smsController.insert(obj.doc);
     producer.send([{topic: 'Normal',messages: json , attributes: 1}], function (
       err,
       result
