@@ -24,7 +24,7 @@ const smsController = require('./smsController');
 
 //-----Mongo-----
 var mongoose = require('mongoose');
-const dotenv = require('dotenv').config({path:'../config/.env'});;
+const dotenv = require('dotenv').config({path:'./.env'});;
 const url = process.env.MONGODB;
 mongoose.connect(url+'/SMS', { useNewUrlParser: true, useUnifiedTopology: true})
 

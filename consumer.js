@@ -1,5 +1,5 @@
 'use strict';
-require('dotenv').config({path:'./config/.env'});
+require('dotenv').config({path:'./.env'});
 var ConsumerGroup = require('kafka-node').ConsumerGroup;
 const consumerConfig = require('./config/consumerConfig')
 const { v4: uuidv4 } = require('uuid');
@@ -21,7 +21,6 @@ consumerGroup.on('error', (err) => {
 
 //-----Mongo-----
 var mongoose = require('mongoose');
-const dotenv = require('dotenv').config({path:'../config/.env'});;
 const url = process.env.MONGODB;
 
 

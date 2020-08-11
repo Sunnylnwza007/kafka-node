@@ -1,5 +1,5 @@
 // -----ENV-----
-require('dotenv').config({path:'./config/.env'});
+require('dotenv').config({path:'./.env'});
 const url = process.env.MONGODB;
 const producerConfig = require('./config/producerConfig')
 
